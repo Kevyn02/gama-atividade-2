@@ -194,6 +194,7 @@ criandoOptions();
 var pagIni = 1;
 function paginacao(pag) {
     var pagNav = document.getElementsByClassName('pag');
+    pagIni = pag;
     if (pag > pagNav.length) {
         pagIni = 1;
     }
@@ -222,6 +223,8 @@ function paginacao(pag) {
     }
 }
 
+paginacao(pagIni);
+
 function mostraPag(sinal) {
     if (sinal == '+') {
         paginacao(++pagIni);
@@ -230,4 +233,3 @@ function mostraPag(sinal) {
         paginacao(--pagIni);
     }
 }
-paginacao(1);
