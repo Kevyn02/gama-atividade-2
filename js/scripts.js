@@ -1,5 +1,7 @@
 var pagIni = 1;
 var quartos;
+var tipo = [];
+
 //Pegando a base de dados
 var requestURL = 'https://api.sheety.co/30b6e400-9023-4a15-8e6c-16aa4e3b1e72';
 var request = new XMLHttpRequest();
@@ -8,9 +10,9 @@ request.responseType = 'json';
 request.send();
 request.onload = function () {
     quartos = request.response;
-    criandoDinamincamenteCards(quartos);
-    criandoOptions(quartos);
-    paginacao(pagIni, quartos);
+    criandoDinamincamenteCards();
+    criandoOptions();
+    criaPaginas();
 }
 
 var card = document.getElementsByClassName('card');
@@ -79,7 +81,6 @@ function criandoDinamincamenteCards() {
 
 //Parte da criação dos tipos no select
 function criandoOptions() {
-    var tipo = [];
     for (var i = 0; i < quartos.length; i++) {
         if (tipo.length == 0) {
             tipo.push(quartos[i]['property_type']);
@@ -91,15 +92,44 @@ function criandoOptions() {
     var select = document.getElementById('select_tipos');
     for (i = 0; i < tipo.length; i++) {
         option = document.createElement('option');
-        option.value = i;
+        option.value = i + 1;
         option.text = tipo[i];
         select.add(option);
     }
 }
 
 //Parte do codigo paginação
+function criaPaginas() {
+    var limite = parseInt(quartos.length / 6) + 1;
+    var ul = document.getElementsByClassName('pagination');
+
+    for (var i = 0; i <= limite; i++) {
+        var li = document.createElement('li');
+        var a = document.createElement('a');
+        a.setAttribute('class', 'page-link');
+        a.setAttribute('href', '#');
+        if (i == 0) {
+            a.innerHTML = "<";
+            a.setAttribute('onclick', 'mostraPag("-");');
+            li.setAttribute('id', 'pag-prev');
+        } else if (i == limite) {
+            a.innerHTML = ">";
+            a.setAttribute('onclick', 'mostraPag("+");');
+            li.setAttribute('id', 'pag-next');
+        } else {
+            li.setAttribute('class', 'page-item pag');
+            a.innerHTML = i;
+            a.setAttribute('onclick', 'paginacao(' + i + ');');
+        }
+        li.appendChild(a);
+        ul[0].appendChild(li);
+    }
+
+    paginacao(pagIni)
+}
 function paginacao(pag) {
     var pagNav = document.getElementsByClassName('pag');
+
     pagIni = pag;
     if (pag > pagNav.length) {
         pagIni = 1;
@@ -136,4 +166,9 @@ function mostraPag(sinal) {
     else if (sinal == '-') {
         paginacao(--pagIni);
     }
+}
+
+function mostrarTipos() {
+    var select = document.getElementById('select_tipos');
+
 }

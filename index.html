@@ -34,6 +34,7 @@
                     <form class="form-inline my-2 my-lg-0">
                         <input class="form-control mr-sm-2" type="text" placeholder="Search">
                         <select name="tipos" id="select_tipos" class="form-control">
+                            <option value="0" selected>Todos</option>
                         </select>
                         <input type="date" class="form-control" name="data_entrada" id="data_entrada">
                         <input type="date" class="form-control" name="data_saida" id="data_saida">
@@ -51,24 +52,7 @@
         <footer>
             <nav aria-label="...">
                 <ul class="pagination">
-                    <li class="page-item" id="pag-prev">
-                        <a class="page-link" href="#" onclick="mostraPag('-');">Previous</a>
-                    </li>
-                    <li class="page-item pag">
-                        <a class="page-link" href="#" onclick="paginacao(1);">1</a>
-                    </li>
-                    <li class="page-item pag">
-                        <a class="page-link" href="#" onclick="paginacao(2);">2</a>
-                    </li>
-                    <li class="page-item pag">
-                        <a class="page-link" href="#" onclick="paginacao(3);">3</a>
-                    </li>
-                    <li class="page-item pag">
-                        <a class="page-link" href="#" onclick="paginacao(4);">4</a>
-                    </li>
-                    <li class="page-item" id="pag-next">
-                        <a class="page-link" href="#" onclick="mostraPag('+');">Next</a>
-                    </li>
+                    
                 </ul>
             </nav>
         </footer>
