@@ -1,5 +1,5 @@
 var pagIni = 1;
-var quartos;
+var quartos, quartoResp;
 var tipo = [];
 
 //Pegando a base de dados
@@ -10,9 +10,9 @@ request.responseType = 'json';
 request.send();
 request.onload = function () {
     quartos = request.response;
-    criandoDinamincamenteCards();
+    quartoResp = quartos;
     criandoOptions();
-    criaPaginas();
+    mostrarTipos();
 }
 
 var card = document.getElementsByClassName('card');
@@ -22,11 +22,19 @@ var card = document.getElementsByClassName('card');
 function criandoDinamincamenteCards() {
     var image, nome, tipo, preco;
     var cards = document.getElementById('cards');
-    for (var i = 0; i < quartos.length; i++) {
-        nome = quartos[i]['name'];
-        tipo = 'Tipo: ' + quartos[i]['property_type'];
-        preco = 'R$ ' + quartos[i]['price'] + '/noite';
-        image = quartos[i]['photo'];
+    var divCards = document.getElementsByClassName('card');
+    var tamanho = divCards.length;
+    if (tamanho > 0) {
+        for (var i = tamanho - 1; i >= 0; i--) {
+            divCards[i].remove();
+        }
+    }
+
+    for (var i = 0; i < quartoResp.length; i++) {
+        nome = quartoResp[i]['name'];
+        tipo = 'Tipo: ' + quartoResp[i]['property_type'];
+        preco = 'R$ ' + quartoResp[i]['price'] + '/noite';
+        image = quartoResp[i]['photo'];
 
         var divPrincipal = document.createElement("div");
         divPrincipal.setAttribute("class", "card col my-2");
@@ -74,25 +82,22 @@ function criandoDinamincamenteCards() {
 
         cards.appendChild(divPrincipal);
     }
-    for (var i = 0; i < card.length; i++) {
-        card[i].style.display = 'none';
-    }
 }
 
 //Parte da criação dos tipos no select
 function criandoOptions() {
-    for (var i = 0; i < quartos.length; i++) {
+    for (var i = 0; i < quartoResp.length; i++) {
         if (tipo.length == 0) {
-            tipo.push(quartos[i]['property_type']);
-        } else if (tipo.indexOf(quartos[i]['property_type']) == -1) {
-            tipo.push(quartos[i]['property_type']);
+            tipo.push(quartoResp[i]['property_type']);
+        } else if (tipo.indexOf(quartoResp[i]['property_type']) == -1) {
+            tipo.push(quartoResp[i]['property_type']);
         }
     }
     console.log(tipo);
     var select = document.getElementById('select_tipos');
     for (i = 0; i < tipo.length; i++) {
         option = document.createElement('option');
-        option.value = i + 1;
+        option.value = tipo[i];
         option.text = tipo[i];
         select.add(option);
     }
@@ -100,31 +105,42 @@ function criandoOptions() {
 
 //Parte do codigo paginação
 function criaPaginas() {
-    var limite = parseInt(quartos.length / 6) + 1;
-    var ul = document.getElementsByClassName('pagination');
-
-    for (var i = 0; i <= limite; i++) {
-        var li = document.createElement('li');
-        var a = document.createElement('a');
-        a.setAttribute('class', 'page-link');
-        a.setAttribute('href', '#');
-        if (i == 0) {
-            a.innerHTML = "<";
-            a.setAttribute('onclick', 'mostraPag("-");');
-            li.setAttribute('id', 'pag-prev');
-        } else if (i == limite) {
-            a.innerHTML = ">";
-            a.setAttribute('onclick', 'mostraPag("+");');
-            li.setAttribute('id', 'pag-next');
-        } else {
-            li.setAttribute('class', 'page-item pag');
-            a.innerHTML = i;
-            a.setAttribute('onclick', 'paginacao(' + i + ');');
-        }
-        li.appendChild(a);
-        ul[0].appendChild(li);
+    var limite = parseInt(quartoResp.length / 6) + 1;
+    if(parseInt(quartoResp.length % 6) > 0){
+        limite += 1;
     }
+    var nav = document.getElementById('nav-pagination');
+    var ul = document.getElementsByClassName('pagination');
+    if (ul.length == 1) {
+        ul[0].remove();
+    }
+    ul = document.createElement('ul');
+    ul.setAttribute('class', 'pagination');
 
+    if (limite > 1) {
+        for (var i = 0; i <= limite; i++) {
+            var li = document.createElement('li');
+            var a = document.createElement('a');
+            a.setAttribute('class', 'page-link');
+            a.setAttribute('href', '#');
+            if (i == 0) {
+                a.innerHTML = "<";
+                a.setAttribute('onclick', 'mostraPag("-");');
+                li.setAttribute('id', 'pag-prev');
+            } else if (i == limite) {
+                a.innerHTML = ">";
+                a.setAttribute('onclick', 'mostraPag("+");');
+                li.setAttribute('id', 'pag-next');
+            } else {
+                li.setAttribute('class', 'page-item pag');
+                a.innerHTML = i;
+                a.setAttribute('onclick', 'paginacao(' + i + ');');
+            }
+            li.appendChild(a);
+            ul.appendChild(li);
+        }
+    }
+    nav.appendChild(ul);
     paginacao(pagIni)
 }
 function paginacao(pag) {
@@ -140,7 +156,7 @@ function paginacao(pag) {
 
     var min = 6 * (pagIni - 1);
     var max = 6 * pagIni - 1
-    for (var i = 0; i < quartos.length; i++) {
+    for (var i = 0; i < quartoResp.length; i++) {
         if (i >= min && i <= max) {
             card[i].style.display = 'block';
         }
@@ -168,7 +184,21 @@ function mostraPag(sinal) {
     }
 }
 
+var select = document.getElementById('select_tipos');
 function mostrarTipos() {
-    var select = document.getElementById('select_tipos');
+    var selectTipo = select.value;
+    quartoResp = [];
+    if (selectTipo == 'todos') {
+        quartoResp = quartos;
+    }
+    else {
+        for (var i = 0; i < quartos.length; i++) {
+            if (quartos[i]['property_type'] == selectTipo) {
+                quartoResp.push(quartos[i]);
+            }
+        }
+    }
 
+    criandoDinamincamenteCards();
+    criaPaginas();
 }

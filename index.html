@@ -33,8 +33,8 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <form class="form-inline my-2 my-lg-0">
                         <input class="form-control mr-sm-2" type="text" placeholder="Search">
-                        <select name="tipos" id="select_tipos" class="form-control">
-                            <option value="0" selected>Todos</option>
+                        <select name="tipos" id="select_tipos" class="form-control" onchange="mostrarTipos()">
+                            <option value="todos" selected>Todos</option>
                         </select>
                         <input type="date" class="form-control" name="data_entrada" id="data_entrada">
                         <input type="date" class="form-control" name="data_saida" id="data_saida">
@@ -50,10 +50,7 @@
             </div>
         </main>
         <footer>
-            <nav aria-label="...">
-                <ul class="pagination">
-                    
-                </ul>
+            <nav id="nav-pagination">
             </nav>
         </footer>
     </div>
