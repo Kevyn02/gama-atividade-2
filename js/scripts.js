@@ -15,9 +15,6 @@ request.onload = function () {
     mostrarTipos();
 }
 
-var card = document.getElementsByClassName('card');
-//console.log(card.length);
-
 //Parte da criação dos cards
 function criandoDinamincamenteCards() {
     var image, nome, tipo, preco;
@@ -66,11 +63,11 @@ function criandoDinamincamenteCards() {
         pTipo.innerHTML = tipo;
 
         var pPreco = document.createElement("p");
-        pPreco.setAttribute('class', 'card-text');
+        pPreco.setAttribute('class', 'card-text preco');
         pPreco.innerHTML = preco;
 
         var pTotal = document.createElement("p");
-        pTotal.setAttribute('class', 'card-text');
+        pTotal.setAttribute('class', 'card-text total');
 
         divCardBody.appendChild(h5);
         divCardBody.appendChild(pTipo);
@@ -82,6 +79,7 @@ function criandoDinamincamenteCards() {
 
         cards.appendChild(divPrincipal);
     }
+    mostrarTotal();
 }
 
 //Parte da criação dos tipos no select
@@ -93,7 +91,6 @@ function criandoOptions() {
             tipo.push(quartoResp[i]['property_type']);
         }
     }
-    console.log(tipo);
     var select = document.getElementById('select_tipos');
     for (i = 0; i < tipo.length; i++) {
         option = document.createElement('option');
@@ -106,7 +103,7 @@ function criandoOptions() {
 //Parte do codigo paginação
 function criaPaginas() {
     var limite = parseInt(quartoResp.length / 6) + 1;
-    if(parseInt(quartoResp.length % 6) > 0){
+    if (parseInt(quartoResp.length % 6) > 0) {
         limite += 1;
     }
     var nav = document.getElementById('nav-pagination');
@@ -143,9 +140,10 @@ function criaPaginas() {
     nav.appendChild(ul);
     paginacao(pagIni)
 }
+
 function paginacao(pag) {
     var pagNav = document.getElementsByClassName('pag');
-
+    var card = document.getElementsByClassName('card');
     pagIni = pag;
     if (pag > pagNav.length) {
         pagIni = 1;
@@ -184,6 +182,7 @@ function mostraPag(sinal) {
     }
 }
 
+//Parte do codigo para mostra cards de acordo com o tipo selecionado
 var select = document.getElementById('select_tipos');
 function mostrarTipos() {
     var selectTipo = select.value;
@@ -201,4 +200,47 @@ function mostrarTipos() {
 
     criandoDinamincamenteCards();
     criaPaginas();
+}
+
+//Parte do codigo para calcular a estadia de acordo com os dias escolhidos
+function calculaData(dataEntrada, dataSaida) {
+    dataEntrada = new Date(dataEntrada);
+    dataEntrada.setDate(dataEntrada.getDate() + 1);
+    console.log(dataEntrada);
+
+
+    dataSaida = new Date(dataSaida);
+    dataSaida.setDate(dataSaida.getDate() + 1);
+    console.log(dataSaida);
+
+    var diferenciaTempo = dataSaida.getTime() - dataEntrada.getTime();
+    return parseInt(diferenciaTempo / (1000 * 3600 * 24));
+}
+
+function mostrarTotal() {
+    var dataEntrada = document.getElementById('data_entrada').value;
+    var dataSaida = document.getElementById('data_saida').value;
+    if (dataEntrada != "" && dataSaida != "") {
+        var preco = document.getElementsByClassName('preco');
+        var total = document.getElementsByClassName('total');
+        var resultado = 0;
+        var texto;
+
+        var diferenciaDias = calculaData(dataEntrada, dataSaida);
+        console.log(diferenciaDias);
+        if (diferenciaDias <= 0) {
+            alert('Selecione as data corretamente!');
+            for (var i = 0; i < preco.length; i++) {
+                total[i].innerHTML = "";
+            }
+        } else {
+            for (var i = 0; i < preco.length; i++) {
+                texto = preco[i].innerHTML.replace('/noite', '');
+                texto = texto.replace('R$ ', '');
+                resultado = parseFloat(texto) * diferenciaDias
+                total[i].innerHTML = 'Dias: ' + diferenciaDias + ', Total: R$' + resultado.toFixed(2).replace('.', ',');
+            }
+        }
+    }
+
 }

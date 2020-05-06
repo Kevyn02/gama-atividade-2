@@ -36,9 +36,8 @@
                         <select name="tipos" id="select_tipos" class="form-control" onchange="mostrarTipos()">
                             <option value="todos" selected>Todos</option>
                         </select>
-                        <input type="date" class="form-control" name="data_entrada" id="data_entrada">
-                        <input type="date" class="form-control" name="data_saida" id="data_saida">
-                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                        <input type="date" class="form-control" name="data_entrada" id="data_entrada" onchange="mostrarTotal()">
+                        <input type="date" class="form-control" name="data_saida" id="data_saida" onchange="mostrarTotal()">
                     </form>
                 </div>
             </nav>
