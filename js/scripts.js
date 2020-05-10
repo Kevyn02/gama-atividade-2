@@ -36,20 +36,10 @@ function criandoDinamincamenteCards() {
         var divPrincipal = document.createElement("div");
         divPrincipal.setAttribute("class", "card col my-2");
 
-        var divSecundaria = document.createElement("div");
-        divSecundaria.setAttribute("class", "row no-gutters");
-
-        var divImage = document.createElement("div");
-        divImage.setAttribute("class", "col-md-4");
-
         var img = document.createElement('img');
         img.setAttribute('src', image);
         img.setAttribute('class', 'card-img');
-        divImage.appendChild(img);
-        divSecundaria.appendChild(divImage);
-
-        var divTexto = document.createElement("div");
-        divTexto.setAttribute("class", "col-md-8");
+        divPrincipal.appendChild(img);
 
         var divCardBody = document.createElement("div");
         divCardBody.setAttribute("class", "card-body");
@@ -73,9 +63,7 @@ function criandoDinamincamenteCards() {
         divCardBody.appendChild(pTipo);
         divCardBody.appendChild(pPreco);
         divCardBody.appendChild(pTotal);
-        divTexto.appendChild(divCardBody);
-        divSecundaria.appendChild(divTexto);
-        divPrincipal.appendChild(divSecundaria);
+        divPrincipal.appendChild(divCardBody);
 
         cards.appendChild(divPrincipal);
     }
@@ -101,7 +89,7 @@ function criandoOptions() {
 }
 
 //Parte do codigo paginação
-function criaPaginas() {
+function criarPaginas() {
     var limite = parseInt(quartoResp.length / 6) + 1;
     if (parseInt(quartoResp.length % 6) > 0) {
         limite += 1;
@@ -112,7 +100,7 @@ function criaPaginas() {
         ul[0].remove();
     }
     ul = document.createElement('ul');
-    ul.setAttribute('class', 'pagination');
+    ul.setAttribute('class', 'pagination justify-content-center');
 
     if (limite > 1) {
         for (var i = 0; i <= limite; i++) {
@@ -199,7 +187,7 @@ function mostrarTipos() {
     }
 
     criandoDinamincamenteCards();
-    criaPaginas();
+    criarPaginas();
 }
 
 //Parte do codigo para calcular a estadia de acordo com os dias escolhidos

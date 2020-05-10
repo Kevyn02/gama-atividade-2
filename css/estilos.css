@@ -1,6 +1,9 @@
+*{
+    font-family: Circular, -apple-system, BlinkMacSystemFont, Roboto, Helvetica Neue, sans-serif;
+}
 .navbar-brand{
     fill: #FF385C;
 }
-.card-img{
-    height: 100%;
+a strong{
+    color: #FF385C;
 }
